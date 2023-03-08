@@ -1,13 +1,13 @@
-CREATE TABLE UserAuthToken (
-    AccessToken VARCHAR(550) PRIMARY KEY,
-    ISU INTEGER
+CREATE TABLE user_auth (
+    access_token VARCHAR(550) PRIMARY KEY NOT NULL,
+    ISU INTEGER NOT NULL
 );
 
-CREATE TABLE UserInfo (
-    ISU INTEGER PRIMARY KEY,
-    GivenName varchar(100),
-    MiddleName varchar(100),
-    FamilyName varchar(100),
-    Email varchar(50),
-    PhoneNumber varchar(20)
+CREATE TABLE user_info (
+    ISU INTEGER PRIMARY KEY NOT NULL,
+    given_name varchar(100) NOT NULL,
+    middle_name varchar(100) NOT NULL,
+    family_name varchar(100),
+    email varchar(50),
+    phone_number varchar(20)
 );
