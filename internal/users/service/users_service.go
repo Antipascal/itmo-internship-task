@@ -2,13 +2,17 @@ package service
 
 import (
 	"github.com/Antipascal/itmo-internship-task/users/adapters"
+	"github.com/Antipascal/itmo-internship-task/users/domain/auth"
+	"github.com/Antipascal/itmo-internship-task/users/ports"
+	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
+	"net/http"
 	"os"
 )
 
-func NewService() {
+func NewService() error {
 	dsn := os.Getenv("POSTGRES_DSN")
 	if dsn == "" {
 		log.Fatal("empty POSTGRES_DSN")
@@ -18,13 +22,20 @@ func NewService() {
 		log.Fatal(err)
 	}
 
-	_, err = adapters.NewAuthPostgres(db)
+	authRepo, err := adapters.NewAuthPostgres(db)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = adapters.NewUsersPostgres(db)
+	usersRepo, err := adapters.NewUsersPostgres(db)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	am := auth.NewManager(authRepo, usersRepo)
+
+	s := ports.NewHTTPServer(*am)
+	r := mux.NewRouter()
+	s.SetupRoutes(r)
+	return http.ListenAndServe(":8080", r)
 }

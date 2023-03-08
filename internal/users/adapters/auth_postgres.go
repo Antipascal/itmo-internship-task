@@ -26,7 +26,7 @@ func NewAuthPostgres(db *gorm.DB) (*AuthPostgres, error) {
 	return &AuthPostgres{db: db}, nil
 }
 
-func (a *AuthPostgres) FindISUByToken(token string) (int, error) {
+func (a *AuthPostgres) FindISU(token string) (int, error) {
 	var authModel UserAuth
 	if err := a.db.First(&authModel, "access_token = ?", token).Error; err != nil {
 		return 0, err
@@ -34,7 +34,7 @@ func (a *AuthPostgres) FindISUByToken(token string) (int, error) {
 	return authModel.ISU, nil
 }
 
-func (a *AuthPostgres) AddAuthRecord(token string, ISU int) error {
+func (a *AuthPostgres) Create(token string, ISU int) error {
 	authModel := UserAuth{
 		AccessToken: token,
 		ISU:         ISU,

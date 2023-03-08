@@ -1,10 +1,10 @@
 package adapters
 
 type UsersRepository interface {
-	FindUserByISU(ISU int) (user UserDTO, err error)
-	FindUserByPhoneNumber(phoneNumber string) (user UserDTO, err error)
-	InsertUser(user UserDTO) error
-	UpdateUser(user UserDTO) error
+	FindByISU(ISU int) (user UserDTO, err error)
+	FindByPhoneNumber(phoneNumber string) (user UserDTO, err error)
+	Insert(user UserDTO) error
+	Update(user UserDTO) error
 	GetUsers(offset, limit int) (users []UserDTO, err error)
 }
 

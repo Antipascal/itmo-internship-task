@@ -38,7 +38,7 @@ func NewUsersPostgres(db *gorm.DB) (*UsersPostgres, error) {
 	return &UsersPostgres{db: db}, nil
 }
 
-func (u *UsersPostgres) FindUserByISU(ISU int) (UserDTO, error) {
+func (u *UsersPostgres) FindByISU(ISU int) (UserDTO, error) {
 	var userInfo UserInfo
 	if err := u.db.First(&userInfo, "isu = ?", ISU).Error; err != nil {
 		return UserDTO{}, err
@@ -46,7 +46,7 @@ func (u *UsersPostgres) FindUserByISU(ISU int) (UserDTO, error) {
 	return userInfo.ToDTO(), nil
 }
 
-func (u *UsersPostgres) FindUserByPhoneNumber(phoneNumber string) (UserDTO, error) {
+func (u *UsersPostgres) FindByPhoneNumber(phoneNumber string) (UserDTO, error) {
 	var userInfo UserInfo
 	if err := u.db.First(&userInfo, "phone_number = ?", phoneNumber).Error; err != nil {
 		return UserDTO{}, err
@@ -54,7 +54,7 @@ func (u *UsersPostgres) FindUserByPhoneNumber(phoneNumber string) (UserDTO, erro
 	return userInfo.ToDTO(), nil
 }
 
-func (u *UsersPostgres) InsertUser(user UserDTO) error {
+func (u *UsersPostgres) Insert(user UserDTO) error {
 	userInfo := UserInfo{
 		ISU:         user.ISU,
 		GivenName:   user.GivenName,
@@ -66,7 +66,7 @@ func (u *UsersPostgres) InsertUser(user UserDTO) error {
 	return u.db.Create(&userInfo).Error
 }
 
-func (u *UsersPostgres) UpdateUser(user UserDTO) error {
+func (u *UsersPostgres) Update(user UserDTO) error {
 	userInfo := UserInfo{
 		ISU:         user.ISU,
 		GivenName:   user.GivenName,
