@@ -23,9 +23,9 @@ type UsersRepository interface {
 
 type UserDTO struct {
 	ISU         int
-	GivenName   string
-	MiddleName  string
-	FamilyName  string
-	Email       string
-	PhoneNumber string
+	GivenName   *string
+	MiddleName  *string
+	FamilyName  *string
+	Email       *string
+	PhoneNumber *string
 }

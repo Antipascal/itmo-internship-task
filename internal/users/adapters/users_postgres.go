@@ -1,18 +1,20 @@
 package adapters
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type UsersPostgres struct {
 	db *gorm.DB
 }
 
 type userInfo struct {
-	ISU         int    `gorm:"primaryKey"`
-	GivenName   string `gorm:"not null"`
-	MiddleName  string `gorm:"not null"`
-	FamilyName  string
-	Email       string
-	PhoneNumber string
+	ISU         int `gorm:"primaryKey"`
+	GivenName   *string
+	MiddleName  *string
+	FamilyName  *string
+	Email       *string
+	PhoneNumber *string
 }
 
 func (userInfo) TableName() string {
@@ -45,6 +47,7 @@ func (u *UsersPostgres) FindByISU(ISU int) (UserDTO, error) {
 	if err := u.db.First(&userInfo, "isu = ?", ISU).Error; err != nil {
 		return UserDTO{}, err
 	}
+
 	return userInfo.ToDTO(), nil
 }
 
