@@ -6,7 +6,7 @@ type UsersPostgres struct {
 	db *gorm.DB
 }
 
-type UserInfo struct {
+type userInfo struct {
 	ISU         int    `gorm:"primaryKey"`
 	GivenName   string `gorm:"not null"`
 	MiddleName  string `gorm:"not null"`
@@ -15,11 +15,11 @@ type UserInfo struct {
 	PhoneNumber string
 }
 
-func (UserInfo) TableName() string {
+func (userInfo) TableName() string {
 	return "user_info"
 }
 
-func (u UserInfo) ToDTO() UserDTO {
+func (u userInfo) ToDTO() UserDTO {
 	return UserDTO{
 		ISU:         u.ISU,
 		GivenName:   u.GivenName,
@@ -30,8 +30,10 @@ func (u UserInfo) ToDTO() UserDTO {
 	}
 }
 
+// NewUsersPostgres creates new UsersPostgres instance
+// and migrates "user_info" table structure
 func NewUsersPostgres(db *gorm.DB) (*UsersPostgres, error) {
-	if err := db.AutoMigrate(&UserInfo{}); err != nil {
+	if err := db.AutoMigrate(&userInfo{}); err != nil {
 		return nil, err
 	}
 
@@ -39,7 +41,7 @@ func NewUsersPostgres(db *gorm.DB) (*UsersPostgres, error) {
 }
 
 func (u *UsersPostgres) FindByISU(ISU int) (UserDTO, error) {
-	var userInfo UserInfo
+	var userInfo userInfo
 	if err := u.db.First(&userInfo, "isu = ?", ISU).Error; err != nil {
 		return UserDTO{}, err
 	}
@@ -47,7 +49,7 @@ func (u *UsersPostgres) FindByISU(ISU int) (UserDTO, error) {
 }
 
 func (u *UsersPostgres) FindByPhoneNumber(phoneNumber string) (UserDTO, error) {
-	var userInfo UserInfo
+	var userInfo userInfo
 	if err := u.db.First(&userInfo, "phone_number = ?", phoneNumber).Error; err != nil {
 		return UserDTO{}, err
 	}
@@ -55,7 +57,7 @@ func (u *UsersPostgres) FindByPhoneNumber(phoneNumber string) (UserDTO, error) {
 }
 
 func (u *UsersPostgres) Insert(user UserDTO) error {
-	userInfo := UserInfo{
+	userInfo := userInfo{
 		ISU:         user.ISU,
 		GivenName:   user.GivenName,
 		MiddleName:  user.MiddleName,
@@ -67,7 +69,7 @@ func (u *UsersPostgres) Insert(user UserDTO) error {
 }
 
 func (u *UsersPostgres) Update(user UserDTO) error {
-	userInfo := UserInfo{
+	userInfo := userInfo{
 		ISU:         user.ISU,
 		GivenName:   user.GivenName,
 		MiddleName:  user.MiddleName,
@@ -79,7 +81,7 @@ func (u *UsersPostgres) Update(user UserDTO) error {
 }
 
 func (u *UsersPostgres) GetUsers(offset, limit int) ([]UserDTO, error) {
-	var users []UserInfo
+	var users []userInfo
 	if err := u.db.Offset(offset).Limit(limit).Find(&users).Error; err != nil {
 		return nil, err
 	}
