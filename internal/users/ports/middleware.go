@@ -35,6 +35,19 @@ func (hs *HTTPServer) AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 		r = r.WithContext(context.WithValue(r.Context(), "ISU", ISU))
+		r = r.WithContext(context.WithValue(r.Context(), "IsAdmin", hs.AuthManager.IsAdmin(ISU)))
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (hs *HTTPServer) AdminMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Check if user is admin
+		isAdmin, ok := r.Context().Value("IsAdmin").(bool)
+		if !ok || !isAdmin {
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
 		next.ServeHTTP(w, r)
 	})
 }

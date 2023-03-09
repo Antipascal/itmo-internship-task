@@ -11,3 +11,7 @@ CREATE TABLE user_info (
     email varchar(50),
     phone_number varchar(20)
 );
+
+CREATE TABLE admins (
+    ISU INTEGER PRIMARY KEY NOT NULL
+);

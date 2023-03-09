@@ -18,11 +18,21 @@ func (UserAuth) TableName() string {
 	return "user_auth"
 }
 
+type AdminAuth struct {
+	ISU int `gorm:"primaryKey, not null"`
+}
+
+func (AdminAuth) TableName() string {
+	return "admins"
+}
+
 func NewAuthPostgres(db *gorm.DB) (*AuthPostgres, error) {
 	if err := db.AutoMigrate(&UserAuth{}); err != nil {
 		return nil, err
 	}
-
+	if err := db.AutoMigrate(&AdminAuth{}); err != nil {
+		return nil, err
+	}
 	return &AuthPostgres{db: db}, nil
 }
 
@@ -41,4 +51,12 @@ func (a *AuthPostgres) Create(token string, ISU int) error {
 	}
 	log.Println(authModel)
 	return a.db.Create(&authModel).Error
+}
+
+func (a *AuthPostgres) IsAdmin(ISU int) bool {
+	var admin AdminAuth
+	if err := a.db.First(&admin, "isu = ?", ISU).Error; err != nil {
+		return false
+	}
+	return true
 }

@@ -7,4 +7,7 @@ type AuthRepository interface {
 
 	// Create add record [token, value] to database.
 	Create(token string, ISU int) error
+
+	// IsAdmin returns true if user with given ISU is admin.
+	IsAdmin(ISU int) bool
 }

@@ -9,6 +9,8 @@ import (
 	"os"
 )
 
+// Manager is a service that manages authentication.
+// It is responsible for getting user access token from itmo id service and storing it in database.
 type Manager struct {
 	authRepository  adapters.AuthRepository
 	usersRepository adapters.UsersRepository
@@ -42,6 +44,7 @@ func NewManager(authRepository adapters.AuthRepository, usersRepository adapters
 	return &Manager{authRepository, usersRepository, &authConfig, provider}, nil
 }
 
+// GetUserAccessToken returns user access token if auth was successful.
 func (m *Manager) GetUserAccessToken(code, state string) (AccessToken string, err error) {
 	u, err := m.getUserInfo(code)
 	if err != nil || u.ISU == 0 {
@@ -106,4 +109,8 @@ func (m *Manager) GetISU(token string) (ISU int, isAuthorized bool) {
 		return 0, false
 	}
 	return isu, true
+}
+
+func (m *Manager) IsAdmin(ISU int) bool {
+	return m.authRepository.IsAdmin(ISU)
 }
