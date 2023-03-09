@@ -1,6 +1,10 @@
 package ports
 
-import "net/http"
+import (
+	"context"
+	"net/http"
+	"strings"
+)
 
 func CorsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -17,8 +21,20 @@ func CorsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func AuthMiddleware(next http.Handler) http.Handler {
+func (hs *HTTPServer) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Check if user is authenticated
+		token, found := strings.CutPrefix(r.Header.Get("Authorization"), "Bearer ")
+		if !found {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		ISU, isAuthorized := hs.AuthManager.GetISU(token)
+		if !isAuthorized {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		r = r.WithContext(context.WithValue(r.Context(), "ISU", ISU))
 		next.ServeHTTP(w, r)
 	})
 }

@@ -1,5 +1,5 @@
 CREATE TABLE user_auth (
-    access_token VARCHAR(550) PRIMARY KEY NOT NULL,
+    access_token VARCHAR(256) PRIMARY KEY NOT NULL,
     ISU INTEGER NOT NULL
 );
 

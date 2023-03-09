@@ -10,7 +10,8 @@ services:
     environment:
       POSTGRES_DSN: ${POSTGRES_DSN}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      ITMO_ID_SECRET: ${ITMO_ID_SECRET}
+      ITMO_CLIENT_SECRET: ${ITMO_CLIENT_SECRET}
+      ITMO_CLIENT_ID: ${ITMO_CLIENT_ID}
     restart: unless-stopped
 
   postgres:

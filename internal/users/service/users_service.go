@@ -32,7 +32,10 @@ func NewService() error {
 		log.Fatal(err)
 	}
 
-	am := auth.NewManager(authRepo, usersRepo)
+	am, err := auth.NewManager(authRepo, usersRepo)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	s := ports.NewHTTPServer(*am)
 	r := mux.NewRouter()
