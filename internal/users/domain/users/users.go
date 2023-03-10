@@ -25,3 +25,11 @@ func (m *Manager) GetUser(ISU int) (user adapters.UserDTO, err error) {
 func (m *Manager) UpdateUser(user adapters.UserDTO) (err error) {
 	return m.usersRepository.Update(user)
 }
+
+func (m *Manager) GetUsers(offset, limit int) (users []adapters.UserDTO, err error) {
+	return m.usersRepository.GetUsers(offset, limit)
+}
+
+func (m *Manager) GetUserByPhone(phone string) (user adapters.UserDTO, err error) {
+	return m.usersRepository.FindByPhoneNumber(phone)
+}

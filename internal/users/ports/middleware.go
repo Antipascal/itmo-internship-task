@@ -40,6 +40,8 @@ func (hs *HTTPServer) AuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// AdminMiddleware checks IsAdmin context value
+// if IsAdmin is false stops request flow
 func (hs *HTTPServer) AdminMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Check if user is admin
